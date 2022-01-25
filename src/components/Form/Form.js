@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { useState } from "react";
 import { nanoid } from "nanoid";
 
 import {
@@ -8,67 +8,74 @@ import {
   ButtonPhoneBook,
 } from "./Form.styled";
 
-export default class ContactForm extends Component {
-  state = {
-    name: "",
-    number: "",
-  };
+export default function ContactForm({ formSubmit }) {
+  const [name, setName] = useState("");
+  const [number, setNumber] = useState("");
 
-  nameInputId = nanoid();
-  numberInputId = nanoid();
+  const nameInputId = nanoid();
+  const numberInputId = nanoid();
 
-  handleNameChange = (event) => {
+  const handleNameChange = (event) => {
     event.preventDefault();
+
     const { name, value } = event.currentTarget;
-    this.setState({ [name]: value });
+
+    switch (name) {
+      case "name":
+        setName(value);
+        break;
+      case "number":
+        setNumber(value);
+        break;
+      default:
+        console.log(`Field type name - ${name} is not processed`);
+    }
   };
 
-  handleSubmit = (evt) => {
+  const handleSubmit = (evt) => {
     evt.preventDefault();
+    /* console.log(number); */
+    formSubmit({ name, number });
 
-    this.props.formSubmit(this.state);
-
-    this.reset();
+    reset();
   };
 
-  reset = () => {
-    this.setState({ name: "", number: "" });
+  const reset = () => {
+    setName("");
+    setNumber("");
   };
-  render() {
-    const { name, number } = this.state;
 
-    return (
-      <FormPhoneBook onSubmit={this.handleSubmit}>
-        <LabelPhoneBook htmlFor={this.nameInputId}>
-          Name
-          <InputPhoneBook
-            type="text"
-            name="name"
-            pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-            title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-            required
-            autoComplete="off"
-            value={name}
-            onChange={this.handleNameChange}
-            id={this.nameInputId}
-          />
-        </LabelPhoneBook>
-        <LabelPhoneBook htmlFor={this.numberInputId}>
-          Number
-          <InputPhoneBook
-            type="tel"
-            name="number"
-            pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-            title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-            required
-            autoComplete="off"
-            value={number}
-            onChange={this.handleNameChange}
-            id={this.numberInputId}
-          />
-        </LabelPhoneBook>
-        <ButtonPhoneBook type="submit">Add contact</ButtonPhoneBook>
-      </FormPhoneBook>
-    );
-  }
+  return (
+    <FormPhoneBook onSubmit={handleSubmit}>
+      <LabelPhoneBook htmlFor={nameInputId}>
+        Name
+        <InputPhoneBook
+          type="text"
+          name="name"
+          pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+          title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+          required
+          autoComplete="off"
+          value={name}
+          onChange={handleNameChange}
+          id={nameInputId}
+        />
+      </LabelPhoneBook>
+      <LabelPhoneBook htmlFor={numberInputId}>
+        Number
+        <InputPhoneBook
+          type="tel"
+          name="number"
+          pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+          title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+          required
+          autoComplete="off"
+          value={number}
+          onChange={handleNameChange}
+          id={numberInputId}
+        />
+      </LabelPhoneBook>
+      <ButtonPhoneBook type="submit">Add contact</ButtonPhoneBook>
+    </FormPhoneBook>
+  );
 }
