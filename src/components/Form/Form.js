@@ -34,7 +34,7 @@ export default function ContactForm({ formSubmit }) {
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    /* console.log(number); */
+
     formSubmit({ name, number });
 
     reset();
